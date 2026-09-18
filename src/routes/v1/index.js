@@ -1,8 +1,7 @@
-const express = require('express')
+const express = require('express');
+const { createAirplane } = require('../../controllers/airplaneController');
 const router = express.Router();
 
-router.get('/info', (req, res) => {
-    return res.json({ msg: "ok" })
-})
+router.post("/add-airplane", createAirplane)
 
 module.exports = router
