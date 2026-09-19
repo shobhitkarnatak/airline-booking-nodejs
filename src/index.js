@@ -3,6 +3,7 @@ const apiRoutes = require("./routes");
 const { dbConnection, sequelize } = require("./config/dbConnect");
 const serverConfig = require("./config/server-config");
 require("./models/airplaneModel");
+require("./models/cityModel");
 
 const app = express();
 app.use(express.json());

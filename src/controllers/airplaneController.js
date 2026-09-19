@@ -1,6 +1,6 @@
 const { http } = require("winston");
 const { AirplaneModel } = require("../models/airplaneModel");
-const { airplaneSchema } = require("../middleware/airplaneSchema");
+const { airplaneSchema } = require("../middleware/schema");
 const { StatusCodes } = require("http-status-codes");
 const { errorResponse, successResponse } = require("../utils/response");
 
@@ -133,9 +133,40 @@ const deleteAirplane = async (req, res) => {
   }
 };
 
+const updateAirplane = async (req, res) => {
+  try {
+    const updateData = req.body;
+    const airplane = await AirplaneModel.findByPk(req.params.id);
+    if (!airplane) {
+      return errorResponse(
+        res,
+        "The airplane you requested not found to update",
+        StatusCodes.NOT_FOUND,
+        "No airplane found to update",
+      );
+    }
+    const updatedAirplane = await airplane.update(updateData);
+
+    return successResponse(
+      res,
+      updatedAirplane,
+      "Airplane updated successfully",
+      StatusCodes.OK,
+    );
+  } catch (error) {
+    return errorResponse(
+      res,
+      "Something went wrong while updating airplane",
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      error.message,
+    );
+  }
+};
+
 module.exports = {
   createAirplane,
   getAirplane,
   getAirplaneById,
   deleteAirplane,
+  updateAirplane,
 };

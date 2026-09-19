@@ -5,4 +5,8 @@ const airplaneSchema = joi.object({
   capacity: joi.number().min(50).max(1000).required(),
 });
 
-module.exports = { airplaneSchema };
+const citySchema = joi.object({
+  name: joi.string().min(2).max(30).required(),
+});
+
+module.exports = { airplaneSchema, citySchema };
