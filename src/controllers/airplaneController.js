@@ -18,13 +18,15 @@ const createAirplane = async (req, res) => {
 
     // Check if airplane already exist
     const existingModelNumber = await AirplaneModel.findOne({
-      modelNumber: req.body.modelNumber,
+      where: {
+        modelNumber: req.body.modelNumber,
+      },
     });
 
     if (existingModelNumber) {
       return errorResponse(
         res,
-        "Alirplane already exists",
+        "Airplane already exists",
         StatusCodes.CONFLICT,
         "Model number must be unique",
       );
@@ -51,12 +53,89 @@ const createAirplane = async (req, res) => {
   }
 };
 
-const getAirplane = (req, res) => {};
+const getAirplane = async (req, res) => {
+  try {
+    const airplane = await AirplaneModel.findAll();
+    return successResponse(
+      res,
+      airplane,
+      "Airplane data fetch successfully",
+      StatusCodes.OK,
+    );
+  } catch (error) {
+    return errorResponse(
+      res,
+      "Something went wrong while fetching airplane",
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      error.message,
+    );
+  }
+};
 
-const updateAirplane = (req, res) => {};
+const getAirplaneById = async (req, res) => {
+  try {
+    const airplane = await AirplaneModel.findByPk(req.params.id);
+    if (!airplane) {
+      return errorResponse(
+        res,
+        "The airplane you requested not found",
+        StatusCodes.NOT_FOUND,
+        "No airplane found",
+      );
+    }
+    return successResponse(
+      res,
+      airplane,
+      "Airplane fetched successfully",
+      StatusCodes.OK,
+    );
+  } catch (error) {
+    return errorResponse(
+      res,
+      "Something went wrong while fetching airplane",
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      error.message,
+    );
+  }
+};
+
+const deleteAirplane = async (req, res) => {
+  console.log(req.params.id);
+  try {
+    const airplane = await AirplaneModel.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (!airplane) {
+      return errorResponse(
+        res,
+        "The airplane you requested not found to delete",
+        StatusCodes.NOT_FOUND,
+        "No airplane found to delete",
+      );
+    }
+
+    return successResponse(
+      res,
+      airplane,
+      "Airplane deleted successfully",
+      StatusCodes.OK,
+    );
+  } catch (error) {
+    return errorResponse(
+      res,
+      "Something went wrong while deleting airplane",
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      error.message,
+    );
+  }
+};
 
 module.exports = {
   createAirplane,
   getAirplane,
-  updateAirplane,
+  getAirplaneById,
+  deleteAirplane,
 };
