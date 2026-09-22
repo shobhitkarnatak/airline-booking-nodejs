@@ -48,4 +48,56 @@ const createCity = async (req, res) => {
   }
 };
 
-module.exports = { createCity };
+const getCities = async (req, res) => {
+  try {
+    const city = await CityModel.findAll();
+    return successResponse(
+      res,
+      city,
+      "City data fetch successfully",
+      StatusCodes.OK,
+    );
+  } catch (error) {
+    return errorResponse(
+      res,
+      "Something went wrong while fetching city",
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      error.message,
+    );
+  }
+};
+
+const deleteCity = async (req, res) => {
+  try {
+    const city = await CityModel.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (!city) {
+      return errorResponse(
+        res,
+        "The city you requested not found to delete",
+        StatusCodes.NOT_FOUND,
+        "No city found to delete",
+      );
+    }
+
+    return successResponse(
+      res,
+      city,
+      "City deleted successfully",
+      StatusCodes.OK,
+    );
+  } catch (error) {
+    return errorResponse(
+      res,
+      "Something went wrong while deleting airplane",
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      error.message,
+    );
+  }
+};
+
+module.exports = { createCity, deleteCity, getCities };

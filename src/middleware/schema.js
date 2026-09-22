@@ -9,4 +9,11 @@ const citySchema = joi.object({
   name: joi.string().min(2).max(30).required(),
 });
 
+const airportSchema = joi.object({
+  name: joi.string().min(2).max(30).required(),
+  code: joi.string().
+  address:
+  cityId:
+});
+
 module.exports = { airplaneSchema, citySchema };
